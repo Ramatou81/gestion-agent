@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  agent: one
+  start_date: 2025-08-26
+  end_date: 2025-08-26
+  status: MyString
+
+two:
+  agent: two
+  start_date: 2025-08-26
+  end_date: 2025-08-26
+  status: MyString

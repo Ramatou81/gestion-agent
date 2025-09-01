@@ -17,12 +17,31 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
   </head>
 
-  <body>
+<body>
+
+  <% flash.each do |key, message| %>
+  <div
+    class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 max-w-xl w-full px-6 py-3 rounded-lg text-white font-medium
+           <%= key == 'notice' ? 'bg-pink-500' : 'bg-pink-700' %>"
+    data-controller="flash"
+  >
+    <%= message %>
+  </div>
+<% end %>
+
+
+  <main class="container mx-auto mt-28 px-5 flex">
     <%= yield %>
-  </body>
+  </main>
+</body>
+
 </html>

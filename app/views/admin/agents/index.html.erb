@@ -1,0 +1,124 @@
+
+<div class="max-w-7xl mx-auto p-6 md:p-8 lg:p-12">
+  <!-- Enhanced Header Section -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div class="space-y-1">
+      <h1 class="text-4xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+        Liste des Agents
+      </h1>
+      <p class="text-slate-500">Gérez votre équipe et leurs informations</p>
+    </div>
+    
+    <%= link_to new_admin_agent_path, 
+        class: "group relative px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5" do %>
+      <div class="absolute inset-0 bg-white rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <i class="fas fa-plus-circle mr-2 group-hover:scale-110 transition-transform duration-300"></i>
+      Nouvel agent
+    <% end %>
+  </div>
+
+  <!-- Enhanced Table Container -->
+  <div class="bg-white rounded-2xl shadow-lg border border-pink-100/50 overflow-hidden backdrop-blur-xl">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-100">
+        <!-- Enhanced Table Header -->
+        <thead class="bg-gradient-to-r from-slate-50 to-pink-50">
+          <tr>
+            <th class="py-4 px-6 text-left">
+              <span class="text-sm font-bold text-slate-700">Nom & Prénom</span>
+            </th>
+            <th class="py-4 px-6 text-left">
+              <span class="text-sm font-bold text-slate-700">Email</span>
+            </th>
+            <th class="py-4 px-6 text-left hidden md:table-cell">
+              <span class="text-sm font-bold text-slate-700">Téléphone</span>
+            </th>
+            <th class="py-4 px-6 text-left hidden lg:table-cell">
+              <span class="text-sm font-bold text-slate-700">Poste</span>
+            </th>
+            <th class="py-4 px-6 text-left">
+              <span class="text-sm font-bold text-slate-700">Statut</span>
+            </th>
+            <th class="py-4 px-6 text-center">
+              <span class="text-sm font-bold text-slate-700">Actions</span>
+            </th>
+          </tr>
+        </thead>
+
+        <!-- Enhanced Table Body -->
+        <tbody class="divide-y divide-slate-100">
+          <% @agents.each do |agent| %>
+            <tr class="group hover:bg-pink-50/50 transition-colors duration-300">
+              <td class="py-4 px-6">
+                <div class="flex items-center space-x-3">
+                  <div class="h-12 w-12 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 p-[2px] group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <div class="h-full w-full rounded-xl bg-white flex items-center justify-center">
+                      <span class="text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                        <%= agent.first_name.first %><%= agent.last_name.first %>
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-slate-900"><%= agent.first_name %> <%= agent.last_name %></p>
+                    <p class="text-sm text-slate-500 lg:hidden"><%= agent.position %></p>
+                  </div>
+                </div>
+              </td>
+
+              <td class="py-4 px-6">
+                <span class="text-sm text-slate-600"><%= agent.email %></span>
+              </td>
+              <td class="py-4 px-6 hidden md:table-cell">
+                <span class="text-sm text-slate-600"><%= agent.phone %></span>
+              </td>
+              <td class="py-4 px-6 hidden lg:table-cell">
+                <span class="text-sm text-slate-600"><%= agent.position %></span>
+              </td>
+
+              <td class="py-4 px-6">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r 
+                  <%= agent.status == 'Active' ? 'from-emerald-500 to-teal-500' : 'from-rose-500 to-pink-500' %> text-white">
+                  <i class="fas fa-circle text-[6px] mr-2"></i>
+                  <%= agent.status %>
+                </span>
+              </td>
+              
+              <!-- Enhanced Action Buttons -->
+            <td class="py-4 px-6">
+  <div class="flex items-center justify-center gap-3">
+    <!-- View Button -->
+   <!-- View Button -->
+<%= link_to admin_agent_path(agent), 
+    class: "group flex items-center p-2.5 rounded-xl bg-pink-50 text-pink-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:text-white transition-all duration-300" do %>
+  <div class="relative">
+    <i class="fas fa-eye text-lg group-hover:scale-110 transition-transform duration-300"></i>
+  </div>
+<% end %>
+
+<!-- Edit Button -->
+<%= link_to edit_admin_agent_path(agent), 
+    class: "group flex items-center p-2.5 rounded-xl bg-pink-50 text-purple-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:text-white transition-all duration-300" do %>
+  <div class="relative">
+    <i class="fas fa-edit text-lg group-hover:scale-110 transition-transform duration-300"></i>
+  </div>
+<% end %>
+
+<!-- Delete Button -->
+<%= button_to admin_agent_path(agent),
+    method: :delete,
+    data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" },
+    class: "group flex items-center p-2.5 rounded-xl bg-pink-50 text-rose-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:text-white transition-all duration-300" do %>
+  <div class="relative">
+    <i class="fas fa-trash-alt text-lg group-hover:scale-110 transition-transform duration-300"></i>
+  </div>
+<% end %>
+
+  </div>
+</td>
+               </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

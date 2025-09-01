@@ -1,0 +1,46 @@
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">Gestion de la demande de congé</h1>
+
+  <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
+    
+    <!-- Informations sur l'employé -->
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Employé</h2>
+      <p class="mt-1 text-gray-800"><%= @leave_request.user.full_name %></p>
+    </div>
+
+    <!-- Dates -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <h2 class="text-sm font-medium text-gray-700">Date de début</h2>
+        <p class="mt-1 text-gray-800"><%= @leave_request.start_date %></p>
+      </div>
+      <div>
+        <h2 class="text-sm font-medium text-gray-700">Date de fin</h2>
+        <p class="mt-1 text-gray-800"><%= @leave_request.end_date %></p>
+      </div>
+    </div>
+
+    <!-- Statut actuel -->
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Statut</h2>
+      <% status_classes = case @leave_request.status
+         when "pending" then "bg-yellow-100 text-yellow-800"
+         when "approved" then "bg-green-100 text-green-800"
+         when "rejected" then "bg-red-100 text-red-800"
+         else "bg-gray-100 text-gray-800"
+         end %>
+      <span class="px-3 py-1 rounded-full text-sm font-semibold <%= status_classes %>">
+        <%= @leave_request.status.capitalize %>
+      </span>
+    </div>
+
+    <!-- Actions manager -->
+    <div class="flex flex-wrap gap-2 mt-4">
+      <%= button_to "Approuver", manager_leave_request_path(@leave_request, status: "approved"), method: :patch, class: "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors duration-200" %>
+      <%= button_to "Refuser", manager_leave_request_path(@leave_request, status: "rejected"), method: :patch, class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors duration-200" %>
+      <%= link_to "Retour", manager_leave_requests_path, class: "bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition-colors duration-200" %>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<h1 class="text-2xl font-bold mb-6">Présences de mes agents actifs</h1>
+
+<table class="min-w-full bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
+  <thead class="bg-gray-100">
+    <tr>
+      <th>Agent</th>
+      <th>Check-in</th>
+      <th>Check-out</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @agents.each do |agent| %>
+      <% last_attendance = agent.attendances.order(check_in: :desc).first %>
+      <tr>
+        <td><%= agent.full_name %></td>
+        <td><%= last_attendance&.check_in&.strftime("%d/%m/%Y %H:%M") || "Non pointé" %></td>
+        <td><%= last_attendance&.check_out&.strftime("%d/%m/%Y %H:%M") || "Non pointé" %></td>
+        <td>
+          <% if last_attendance %>
+            <%= link_to "Voir", manager_attendance_path(last_attendance), class: "bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" %>
+            <%= link_to "Modifier", edit_manager_attendance_path(last_attendance), class: "bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded" %>
+          <% else %>
+            <span class="text-gray-400">Aucune action</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

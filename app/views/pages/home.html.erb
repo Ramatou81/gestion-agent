@@ -1,0 +1,400 @@
+
+<div class="min-h-screen font-sans antialiased bg-pink-50/30">
+  <!-- Header with Glassmorphism effect -->
+  <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-b border-pink-100/30 shadow-sm z-50">
+    <div class="container mx-auto">
+      <div class="flex items-center justify-between px-6 py-4 md:px-12">
+        <!-- Logo avec animation subtile -->
+        <div class="flex items-center space-x-4 group">
+          <%= image_tag "impact-plus.jpeg", 
+              class: "h-14 w-14 rounded-2xl object-cover shadow-lg border-2 border-pink-100/50 
+                     group-hover:shadow-pink-200/50 group-hover:scale-105 transition-all duration-500", 
+              alt: "Impact Plus" %>
+          <h1 class="text-2xl md:text-3xl font-black tracking-tight bg-gradient-to-r from-pink-500 to-purple-600 
+                     bg-clip-text text-transparent group-hover:from-rose-600 group-hover:to-pink-500 
+                     transition-all duration-500">
+            Impact Plus
+          </h1>
+        </div>
+
+        
+        <!-- Navigation élégante -->
+<div class="flex items-center gap-8">
+  <nav class="hidden md:flex items-center gap-6">
+    <% nav_items = [
+      { name: 'Tableau de Bord', path: '#', gradient: 'from-pink-500 to-purple-500' },
+      { name: 'Agents', path: admin_agents_path, gradient: 'from-purple-500 to-pink-500' },
+      { name: 'Projets', path: '#', gradient: 'from-pink-500 to-purple-500' },
+      { name: 'Rapports', path: '#', gradient: 'from-purple-500 to-pink-500' }
+    ] %>
+    
+    <% nav_items.each do |item| %>
+      <%= link_to item[:path], class: "relative group py-2" do %>
+        <span class="text-gray-700 font-medium group-hover:text-rose-600 transition-colors duration-300">
+          <%= item[:name] %>
+        </span>
+        <!-- Animated underline with gradient -->
+        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r <%= item[:gradient] %>
+                   scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left
+                   opacity-0 group-hover:opacity-100 transition-all"></span>
+        <!-- Hover glow effect -->
+        <span class="absolute inset-0 rounded-lg bg-gradient-to-r <%= item[:gradient] %>
+                   opacity-0 group-hover:opacity-10 blur-sm transition-opacity duration-300"></span>
+      <% end %>
+    <% end %>
+  </nav>
+          <!-- Boutons d'authentification stylisés -->
+         <div class="flex items-center gap-4">
+  <% if user_signed_in? %>
+    <div class="flex items-center gap-4">
+      <span class="text-gray-600 font-medium">
+        <%= current_user.email %>
+      </span>
+      <%= button_to destroy_user_session_path, 
+          method: :delete,
+          class: "px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white 
+                 font-semibold shadow-lg hover:shadow-purple-200/50 hover:-translate-y-0.5 
+                 active:translate-y-0 transition-all duration-300",
+          data: { confirm: "Voulez-vous vraiment vous déconnecter ?" } do %>
+        <div class="flex items-center gap-2">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Déconnexion</span>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <%= link_to "Se connecter", new_user_session_path, 
+        class: "px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white 
+               font-semibold shadow-lg hover:shadow-purple-200/50 hover:-translate-y-0.5 
+               active:translate-y-0 transition-all duration-300" %>
+    <%= link_to "S'inscrire", new_user_registration_path, 
+        class: "px-5 py-2.5 rounded-xl border-2 border-rose-500 text-purple-600 font-semibold 
+               hover:bg-rose-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" %>
+  <% end %>                    
+</div>
+
+  </header>
+
+  <!-- ...rest of your code... -->
+
+         <main class="w-full min-h-screen bg-gradient-to-b from-gray-50 to-white">
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
+    <div class="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-purple-50 opacity-50"></div>
+    
+   <div class="container mx-auto px-6 md:px-12 relative z-10">
+  <div class="flex flex-col md:flex-row items-center justify-between gap-16">
+    <!-- Text Content -->
+    <div class="md:w-1/2 text-center md:text-left">
+      <div class="space-y-6">
+  <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
+    Optimisez la
+    <span class="relative">
+      <span class="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent font-black">
+        performance 
+      </span>
+      <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+    </span>
+    de vos agents.
+  </h2>
+            
+            <p class="text-xl md:text-2xl text-gray-600 leading-relaxed">
+              La solution complète pour une gestion d'équipe 
+              <span class="font-medium text-pink-600">simple</span>, 
+              <span class="font-medium text-purple-600">efficace</span> et 
+              <span class="font-medium text-pink-600">intuitive</span>.
+            </p>
+          
+
+
+          <div class="flex flex-col sm:flex-row gap-6 justify-center md:justify-start pt-8">
+              <a href="#" class="group relative px-8 py-4 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:shadow-pink-500/25 transform hover:-translate-y-1 transition-all duration-300">
+                <span class="relative z-10">Démarrer gratuitement</span>
+                <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </a>
+              
+              <a href="#" class="px-8 py-4 rounded-xl border-2 border-pink-600 text-purple-600 font-bold text-lg hover:bg-pink-50 transform hover:-translate-y-1 transition-all duration-300">
+                <div class="flex items-center gap-3">
+                  <span>Voir la démo</span>
+                  <i class="fas fa-play-circle"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      <!-- Image Section -->
+        <div class="md:w-1/2 relative group">
+          <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-3xl blur-3xl opacity-20 group-hover:opacity-30 transform group-hover:scale-105 transition-all duration-500"></div>
+          
+          <div class="relative bg-white rounded-3xl shadow-2xl p-2 transform group-hover:-translate-y-2 transition-all duration-500">
+            <%= image_tag "image.jpg", 
+                alt: "Interface de travail moderne", 
+                class: "w-full h-80 md:h-96 object-cover rounded-2xl" %>
+            
+            <!-- Decorative Elements -->
+            <div class="absolute -top-4 -right-4 h-24 w-24 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-20 blur-xl"></div>
+            <div class="absolute -bottom-4 -left-4 h-24 w-24 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-20 blur-xl"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   
+
+   <!-- Features Section -->
+  <section id="features" class="py-24 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-pink-50/30 to-transparent"></div>
+    
+    <div class="container mx-auto px-6 relative z-10">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h3 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          Un impact réel sur votre productivité
+        </h3>
+      </div>
+    
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-4 md:px-0">
+  <% features = [
+    {
+      icon: 'chart-line',
+      title: 'Suivi de performance',
+      description: 'Visualisez les métriques clés de vos agents en temps réel pour une prise de décision éclairée.',
+      gradient: 'from-pink-500 to-purple-500'
+
+    },
+    {
+      icon: 'tasks',
+      title: 'Gestion des tâches',
+      description: 'Attribuez et suivez les missions pour une productivité accrue et un meilleur suivi de projet.',
+      gradient: 'from-pink-500 to-purple-500'
+    },
+    {
+      icon: 'comments',
+      title: 'Communication centralisée',
+      description: 'Facilitez les échanges et la collaboration entre les équipes grâce à notre messagerie intégrée.',
+      gradient: 'from-pink-500 to-purple-500'
+    },
+  ] %>
+
+  <% features.each do |feature| %>
+    <div class="group relative">
+      <!-- Gradient background with blur effect -->
+      <div class="absolute -inset-0.5 bg-gradient-to-r <%= feature[:gradient] %> rounded-2xl opacity-20 blur group-hover:opacity-100 transition duration-500"></div>
+
+      <!-- Card content -->
+      <div class="relative bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-100/50 backdrop-blur-xl">
+        <!-- Icon with gradient background -->
+        <div class="relative mb-6 group-hover:-translate-y-1 transition-transform duration-300">
+          <div class="absolute inset-0 bg-gradient-to-r <%= feature[:gradient] %> rounded-xl blur-sm opacity-50"></div>
+          <div class="relative h-16 w-16 bg-gradient-to-r <%= feature[:gradient] %> rounded-xl flex items-center justify-center transform group-hover:scale-105 transition duration-300">
+            <i class="fas fa-<%= feature[:icon] %> text-2xl text-white"></i>
+          </div>
+        </div>
+
+        <!-- Text content -->
+        <h4 class="text-xl font-bold text-gray-900 mb-3">
+          <span class="bg-gradient-to-r <%= feature[:gradient] %> bg-clip-text text-transparent group-hover:opacity-100 transition-opacity duration-300">
+            <%= feature[:title] %>
+          </span>
+        </h4>
+        
+        <p class="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+          <%= feature[:description] %>
+        </p>
+
+        <!-- Hover line effect -->
+        <div class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r <%= feature[:gradient] %> transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      </div>
+    </div>
+  <% end %>
+</div>
+</section>
+
+  <!-- Section Témoignages with Carousel -->
+<section id="temoignages" class="relative py-16 md:py-24 overflow-hidden">
+  <!-- Background with gradient and pattern -->
+  <div class="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-purple-50"></div>
+<div class="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#6366F1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+<div class="relative container mx-auto px-4">
+  <h3 class="text-4xl md:text-5xl font-extrabold text-center mb-12">
+    <span class="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+      Ils ont fait le choix d'Impact Plus
+    </span>
+  </h3>
+
+
+
+    <div class="max-w-4xl mx-auto">
+      <!-- Testimonial Card with enhanced design -->
+      <div class="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 md:p-12">
+        <!-- Decorative elements -->
+        <div class="absolute -top-4 -right-4 h-24 w-24 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500"></div>
+        <div class="absolute -bottom-4 -left-4 h-24 w-24 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500"></div>
+
+        <!-- Quote Icon -->
+        <div class="relative mb-8">
+          <div class="absolute -top-2 -left-2 h-12 w-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl opacity-20 blur-sm"></div>
+          <div class="relative h-12 w-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl flex items-center justify-center">
+            <i class="fas fa-quote-left text-2xl text-white"></i>
+          </div>
+        </div>
+
+        <!-- Testimonial Content -->
+        <p class="relative text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
+          "Depuis que nous utilisons Impact Plus, nous avons amélioré la productivité de nos agents de 
+          <span class="font-semibold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">30%</span>. 
+          L'interface est intuitive et le suivi de performance est d'une aide précieuse."
+        </p>
+
+        <!-- Author Info with enhanced styling -->
+        <div class="flex items-center justify-center md:justify-start space-x-4">
+  <!-- Cercle avec dégradé -->
+  <div class="h-12 w-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 p-[2px]">
+    <!-- Fond blanc + image -->
+    <div class="h-full w-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+      <%= image_tag "DG.png", alt: "Logo DG", class: "h-10 w-10 object-contain" %>
+    </div>
+  </div>
+
+
+          <div class="text-left">
+            <p class="font-bold text-lg text-gray-900">Cherifatou Agoumo</p>
+            <p class="text-sm text-purple-600">Directrice d'IMPACT PLUS</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Call to Action with enhanced design -->
+<section class="relative py-20 md:py-32 overflow-hidden">
+  <!-- Gradient Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-pink-600 via-purple-600 to-purple-600"></div>
+  
+  <!-- Decorative Patterns -->
+  
+  
+<div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ec4899_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+<div class="relative container mx-auto px-4 text-center">
+  <h3 class="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-6">
+    Prêt à transformer votre<br class="hidden md:block" /> gestion d'équipe ?
+  </h3>
+  
+  <p class="text-xl md:text-2xl text-pink-100 max-w-3xl mx-auto mb-12">
+    Rejoignez des milliers d'entreprises qui font confiance à Impact Plus pour une gestion d'agents simple et efficace.
+  </p>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+      <a href="#" class="group relative px-8 py-4 rounded-xl bg-white font-bold text-lg transform hover:scale-105 transition-all duration-300">
+        <span class="relative z-10 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          Commencer votre essai gratuit
+        </span>
+        <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-100 to-purple-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </a>
+      
+      <a href="#" class="group px-8 py-4 rounded-xl border-2 border-white text-white font-bold text-lg hover:bg-white/10 transition-all duration-300">
+        <div class="flex items-center gap-3">
+          <span>Voir la démo</span>
+          <i class="fas fa-play-circle group-hover:translate-x-1 transition-transform duration-300"></i>
+        </div>
+      </a>
+    </div>
+
+    <!-- Trust Badge -->
+    <p class="mt-8 text-indigo-200 flex items-center justify-center gap-2">
+      <i class="fas fa-shield-alt"></i>
+      <span>Sans carte de crédit. Annulez à tout moment.</span>
+    </p>
+  </div>
+</section>
+
+
+  
+
+</main>
+
+<!-- Enhanced Footer -->
+<footer class="relative bg-gray-900 text-white overflow-hidden">
+  <!-- Decorative gradient -->
+  <div class="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-50"></div>
+  
+  <!-- Subtle pattern -->
+  <div class="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+      <!-- Logo + Description -->
+      <div class="md:col-span-2">
+        <a href="/" class="group flex items-center space-x-3 mb-6">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+            <%= image_tag "impact-plus.jpeg", class: "relative h-12 w-12 rounded-xl object-cover shadow-lg border border-white/10", alt: "Impact Plus" %>
+          </div>
+          <h2 class="text-2xl font-black tracking-tight bg-gradient-to-r from-purple-400 to-purple-400 bg-clip-text text-transparent">
+            Impact Plus
+          </h2>
+        </a>
+        <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+          Optimisez la gestion de votre équipe avec des outils puissants et intuitifs. Découvrez une nouvelle façon de travailler ensemble.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-lg font-bold mb-6 bg-gradient-to-r from-purple-400 to-purple-400 bg-clip-text text-transparent">
+          Liens Rapides
+        </h4>
+        <ul class="space-y-3">
+          <% ['Accueil', 'Fonctionnalités', 'Témoignages', 'Tarifs'].each do |link| %>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300 flex items-center gap-2 group">
+                <span class="h-1 w-1 rounded-full bg-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <%= link %>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-lg font-bold mb-6 bg-gradient-to-r from-purple-400 to-purple-400 bg-clip-text text-transparent">
+          Contact
+        </h4>
+        <ul class="space-y-4">
+          <% [
+            { icon: 'envelope', text: 'contact@impactplus.com' },
+            { icon: 'phone', text: '+227 90 90 22 25' },
+            { icon: 'map-marker-alt', text: '443 Rue de la Technologie, Paris' }
+          ].each do |item| %>
+            <li class="flex items-center space-x-3 text-gray-400 group">
+              <i class="fas fa-<%= item[:icon] %> w-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-300"></i>
+              <span class="group-hover:text-white transition-colors duration-300"><%= item[:text] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-12 pt-8 border-t border-gray-800">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-gray-500 text-sm">
+          &copy; <%= Time.now.year %> Impact Plus. Tous droits réservés.
+        </p>
+        <div class="flex items-center gap-4">
+          <% ['twitter', 'linkedin', 'github'].each do |social| %>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+              <i class="fab fa-<%= social %> text-lg"></i>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

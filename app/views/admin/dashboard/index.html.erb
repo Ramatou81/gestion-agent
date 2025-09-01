@@ -1,0 +1,385 @@
+
+<div class="min-h-screen font-sans antialiased flex">
+  
+  <aside id="sidebar" class="w-80 bg-white/90 backdrop-blur-xl fixed left-0 top-0 h-screen z-20 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-100 shadow-lg">
+    <div class="flex flex-col h-full">
+      <div class="p-8 flex-1">
+        <a href="<%= admin_dashboard_path %>" class="flex items-center space-x-4 mb-10 group">
+          <%= image_tag "impact-plus.jpeg", class: "h-16 w-16 rounded-xl object-cover shadow-lg border-2 border-indigo-100 group-hover:scale-105 transition-transform duration-300", alt: "Impact Plus" %>
+          <div>
+            <h2 class="text-2xl font-black tracking-tight bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+              Impact Plus
+            </h2>
+            <p class="text-sm text-slate-500">Administration</p>
+          </div>
+        </a>
+  
+        <nav class="space-y-1">
+          <% nav_items = [
+            { name: 'Tableau de Bord', path: admin_dashboard_path, icon: 'fas fa-chart-pie', desc: 'Vue d\'ensemble' },
+            { name: 'Agents', path: admin_agents_path, icon: 'fas fa-users-cog', desc: 'Gestion des agents' },
+            { name: 'Départements', path: admin_departments_path, icon: 'fas fa-building', desc: 'Structure organisationnelle' },
+            { name: 'Présences', path: admin_attendances_path, icon: 'fas fa-calendar-check', desc: 'Suivi des présences' },
+            { name: 'Utilisateurs', path: admin_users_path, icon: 'fas fa-user-shield', desc: 'Gestion des accès' },
+            { name: 'Rapports', path: admin_reports_path, icon: 'fas fa-chart-line', desc: 'Statistiques & analyses' },
+            { name: 'Réglages', path: admin_settings_path, icon: 'fas fa-cogs', desc: 'Configuration système' }
+          ] %>
+  
+          <% nav_items.each do |item| %>
+            <% active = current_page?(item[:path]) %>
+            <%= link_to item[:path], class: "flex items-center px-4 py-3 rounded-xl #{active ? 'bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 shadow-sm' : 'hover:bg-slate-50'} transition-all duration-200 group" do %>
+              <div class="flex items-center flex-1">
+                <div class="mr-4 h-10 w-10 flex items-center justify-center rounded-lg #{active ? 'bg-gradient-to-r from-indigo-500 to-violet-500 shadow-md' : 'bg-slate-100'} group-hover:scale-110 transition-all duration-200">
+                  <i class="<%= item[:icon] %> <%= active ? 'text-white' : 'text-slate-600' %>"></i>
+                </div>
+                <div>
+                  <span class="block font-medium text-slate-900"><%= item[:name] %></span>
+                  <span class="text-xs text-slate-500"><%= item[:desc] %></span>
+                </div>
+              </div>
+              <% if active %>
+                <div class="h-10 w-1 bg-gradient-to-b from-indigo-500 to-violet-500 rounded-full"></div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </nav>
+      </div>
+  
+      <div class="p-8 border-t border-slate-100">
+        <div class="flex items-center px-4 py-3 rounded-xl bg-slate-50">
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white shadow-md">
+            <i class="fas fa-user-circle text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <p class="font-medium text-slate-900"><%= current_user.name %></p>
+            <p class="text-xs text-slate-500"><%= current_user.email %></p>
+          </div>
+          <%= button_to destroy_user_session_path, method: :delete, class: "ml-auto text-red-500 hover:text-red-700 transition-colors" do %>
+            <i class="fas fa-sign-out-alt text-lg"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+
+  <main class="flex-1 md:ml-40">
+  <div class="px-8 pt-0">
+    <div class="flex justify-between items-start mb-8">
+      <div class="space-y-1">
+        <h1 class="text-4xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          Tableau de bord
+        </h1>
+        <p class="text-slate-500 text-lg">
+          Bienvenue dans votre espace administrateur
+        </p>
+      </div>
+
+      <div class="flex items-center relative pt-8">
+        <button class="relative group focus:outline-none" onclick="toggleDropdown()">
+          <div class="h-14 w-14 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 p-[2px] group-hover:from-pink-600 group-hover:to-purple-600 transition-all duration-300">
+            <div class="h-full w-full rounded-xl bg-white flex items-center justify-center">
+              <div class="h-full w-full rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center transform group-hover:scale-105 transition-all duration-300">
+                <i class="fas fa-user-circle text-xl text-white"></i>
+              </div>
+            </div>
+            <div class="absolute -bottom-1 -right-1  h-4 w-4 bg-emerald-500 border-2 border-white rounded-full ring-2 ring-emerald-400 ring-opacity-50"></div>
+          </div>
+        </button>
+
+        <!-- Enhanced Dropdown Menu -->
+        <div id="profileDropdown" class="hidden absolute right-0 top-full mt-3 w-80 bg-white rounded-2xl shadow-xl border border-slate-100/50 backdrop-blur-xl overflow-hidden z-50 transform transition-all duration-300">
+          <!-- Enhanced User Info Section -->
+          <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-pink-50 to-purple-50">
+            <div class="flex items-center space-x-4">
+              <div class="h-16 w-16 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 p-[2px]">
+                <div class="h-full w-full rounded-xl bg-white flex items-center justify-center">
+                  <div class="h-full w-full rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
+                    <i class="fas fa-user-circle text-2xl text-white"></i>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p class="text-lg font-bold text-slate-900"><%= current_user.name %></p>
+                <p class="text-sm text-slate-500"><%= current_user.email %></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enhanced Menu Items -->
+          <div class="p-3 space-y-2">
+            <%= link_to edit_user_registration_path, 
+                class: "flex items-center px-4 py-3 rounded-xl hover:bg-slate-50 transition-all duration-300 group" do %>
+              <div class="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-pink-500 transition-colors duration-300">
+                <i class="fas fa-user-cog text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+              </div>
+              <span class="ml-3 font-medium text-slate-600 group-hover:text-slate-900">Paramètres du profil</span>
+            <% end %>
+
+            <%= button_to destroy_user_session_path, 
+                method: :delete, 
+                class: "w-full flex items-center px-4 py-3 rounded-xl hover:bg-red-50 transition-all duration-300 group" do %>
+              <div class="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-red-500 transition-colors duration-300">
+                <i class="fas fa-sign-out-alt text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+              </div>
+              <span class="ml-3 font-medium text-red-600 group-hover:text-red-700">Déconnexion</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+
+<div class="mb-12">
+  <!-- Enhanced Section Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div class="space-y-1">
+      <h2 class="text-2xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+        Statistiques
+      </h2>
+      <p class="text-slate-500">Vue d'ensemble de vos indicateurs clés</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <% stats = [
+      { 
+        title: 'Total Agents',
+        count: defined?(Agent) ? Agent.count : 0,
+        icon: 'fas fa-users',
+        color: 'pink',
+        gradient: 'from-pink-500 to-rose-500',
+        change: '+5%',
+        desc: 'vs dernier mois'
+      },
+      { 
+        title: 'Présences Aujourd\'hui',
+        count: Attendance.where(check_in: Date.today.beginning_of_day..Date.today.end_of_day).count,
+        icon: 'fas fa-calendar-check',
+        color: 'purple',
+        gradient: 'from-purple-500 to-pink-500',
+        change: '98%',
+        desc: 'taux de présence'
+      },
+      { 
+        title: 'Départements',
+        count: defined?(Department) ? Department.count : 0,
+        icon: 'fas fa-building',
+        color: 'rose',
+        gradient: 'from-rose-500 to-pink-500',
+        change: '12',
+        desc: 'départements actifs'
+      },
+      { 
+        title: 'Utilisateurs',
+        count: defined?(User) ? User.count : 0,
+        icon: 'fas fa-user-shield',
+        color: 'pink',
+        gradient: 'from-pink-500 to-purple-500',
+        change: '3',
+        desc: 'nouveaux cette semaine'
+      }
+    ] %>
+    
+    <% stats.each do |stat| %>
+      <div class="group bg-white rounded-2xl p-6 border border-pink-100/50 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 relative overflow-hidden backdrop-blur-xl">
+        <!-- Enhanced inner content with better spacing -->
+        <div class="relative z-10 space-y-4">
+          <div class="flex items-center justify-between">
+            <!-- Enhanced icon container -->
+            <div class="h-16 w-16 rounded-2xl bg-gradient-to-r <%= stat[:gradient] %> p-[2px] group-hover:scale-110 transition-transform duration-500 shadow-lg">
+              <div class="h-full w-full rounded-2xl bg-white flex items-center justify-center">
+                <div class="h-full w-full rounded-2xl bg-gradient-to-r <%= stat[:gradient] %> flex items-center justify-center">
+                  <i class="<%= stat[:icon] %> text-2xl text-white"></i>
+                </div>
+              </div>
+            </div>
+            <!-- Enhanced stat change indicator -->
+            <span class="text-sm font-semibold px-4 py-2 rounded-xl bg-gradient-to-r <%= stat[:gradient] %> text-white shadow-md transform group-hover:scale-105 transition-transform duration-300">
+              <%= stat[:change] %>
+            </span>
+          </div>
+
+          <!-- Enhanced stat display -->
+          <div class="space-y-2">
+            <h3 class="text-4xl font-black bg-gradient-to-r <%= stat[:gradient] %> bg-clip-text text-transparent">
+              <%= stat[:count] %>
+            </h3>
+            <p class="text-lg font-bold text-slate-900"><%= stat[:title] %></p>
+            <p class="text-sm text-slate-500 font-medium"><%= stat[:desc] %></p>
+          </div>
+        </div>
+
+        <!-- Enhanced hover effect -->
+        <div class="absolute inset-0 bg-gradient-to-r <%= stat[:gradient] %> opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-xl"></div>
+      </div>
+    <% end %>
+  </div>
+
+
+  <div class="p-8">
+  <div class="mb-8">
+    <!-- Enhanced Section Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="space-y-1">
+        <h2 class="text-2xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          Actions Rapides
+        </h2>
+        <p class="text-slate-500">Accès rapide aux fonctionnalités principales</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% actions = [
+        { 
+          title: 'Nouvel Agent',
+          desc: 'Ajouter un agent',
+          icon: 'fas fa-user-plus',
+          path: new_admin_agent_path,
+          gradient: 'from-pink-500 to-rose-500'
+        },
+        { 
+          title: 'Présence',
+          desc: 'Enregistrer présence',
+          icon: 'fas fa-clipboard-check',
+          path: new_admin_attendance_path,
+          gradient: 'from-purple-500 to-pink-500'
+        },
+        { 
+          title: 'Rapports',
+          desc: 'Générer rapport',
+          icon: 'fas fa-chart-line',
+          path: admin_reports_path,
+          gradient: 'from-rose-500 to-pink-500'
+        },
+        { 
+          title: 'Réglages',
+          desc: 'Configuration',
+          icon: 'fas fa-cogs',
+          path: admin_settings_path,
+          gradient: 'from-pink-500 to-purple-500'
+        }
+      ] %>
+      
+      <% actions.each do |action| %>
+        <%= link_to action[:path], class: "group relative overflow-hidden bg-white rounded-2xl p-6 border border-pink-100/50 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1" do %>
+          <!-- Enhanced Content Container -->
+          <div class="relative z-10 space-y-4">
+            <!-- Enhanced Icon Container -->
+            <div class="h-16 w-16 rounded-2xl bg-gradient-to-r <%= action[:gradient] %> p-[2px] group-hover:scale-110 transition-transform duration-500 shadow-lg">
+              <div class="h-full w-full rounded-2xl bg-white flex items-center justify-center">
+                <div class="h-full w-full rounded-2xl bg-gradient-to-r <%= action[:gradient] %> flex items-center justify-center">
+                  <i class="<%= action[:icon] %> text-2xl text-white"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Text Content -->
+            <div>
+              <h3 class="text-lg font-bold bg-gradient-to-r <%= action[:gradient] %> bg-clip-text text-transparent">
+                <%= action[:title] %>
+              </h3>
+              <p class="text-sm text-slate-500 mt-1"><%= action[:desc] %></p>
+            </div>
+
+            <!-- Enhanced Arrow Indicator -->
+            <div class="absolute top-6 right-6">
+              <div class="h-8 w-8 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+                <i class="fas fa-arrow-right text-slate-300 group-hover:text-pink-500 group-hover:translate-x-1 transition-all duration-300"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enhanced Hover Effect -->
+          <div class="absolute inset-0 bg-gradient-to-r <%= action[:gradient] %> opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-xl"></div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+            <div class="bg-white rounded-2xl p-8 border border-pink-100/50 shadow-lg hover:shadow-xl transition-all duration-500 backdrop-blur-xl relative overflow-hidden">
+  <!-- Enhanced Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div class="space-y-1">
+      <h2 class="text-2xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+        Activité Récente
+      </h2>
+      <p class="text-slate-500">Dernières actions effectuées</p>
+    </div>
+    
+    <%= link_to "#", 
+        class: "group px-5 py-2 rounded-xl border-2 border-pink-500 font-medium text-purple-600 hover:bg-pink-50 transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2" do %>
+      <span>Voir tout</span>
+      <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform duration-300"></i>
+    <% end %>
+  </div>
+  
+  <div class="space-y-4">
+    <% recent_activities = [
+      OpenStruct.new(description: "Nouvel agent ajouté", created_at: 5.minutes.ago, 
+        icon: "fas fa-user-plus", gradient: "from-pink-500 to-rose-500"),
+      OpenStruct.new(description: "Présence enregistrée", created_at: 1.hour.ago, 
+        icon: "fas fa-clipboard-check", gradient: "from-purple-500 to-pink-500")
+    ] %>
+    
+    <% recent_activities.each do |act| %>
+      <div class="group flex items-center p-4 rounded-xl hover:bg-pink-50/50 transition-all duration-300">
+        <!-- Enhanced Icon Container -->
+        <div class="relative">
+          <div class="h-14 w-14 rounded-xl bg-gradient-to-r <%= act.gradient %> p-[2px] group-hover:scale-110 transition-transform duration-500 shadow-lg">
+            <div class="h-full w-full rounded-xl bg-white flex items-center justify-center">
+              <div class="h-full w-full rounded-xl bg-gradient-to-r <%= act.gradient %> flex items-center justify-center">
+                <i class="<%= act.icon %> text-xl text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Content -->
+        <div class="ml-4 flex-1">
+          <p class="font-bold text-slate-900 group-hover:text-slate-700 transition-colors duration-300">
+            <%= act.description %>
+          </p>
+          <p class="text-sm text-slate-500 flex items-center gap-2">
+            <i class="fas fa-clock text-xs"></i>
+            Il y a <%= time_ago_in_words(act.created_at) %>
+          </p>
+        </div>
+
+        <!-- Enhanced Action Buttons -->
+        <div class="flex items-center gap-2">
+          <button class="p-2 rounded-lg hover:bg-white text-slate-400 hover:text-pink-500 transition-all duration-300">
+            <i class="fas fa-eye text-lg"></i>
+          </button>
+          <button class="p-2 rounded-lg hover:bg-white text-slate-400 hover:text-purple-500 transition-all duration-300">
+            <i class="fas fa-ellipsis-v text-lg"></i>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Decorative Elements -->
+  <div class="absolute -bottom-4 -right-4 h-24 w-24 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-20 blur-xl"></div>
+  <div class="absolute -top-4 -left-4 h-24 w-24 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-20 blur-xl"></div>
+</div>
+
+</main>
+
+<!-- JavaScript for dropdown -->
+<script>
+function toggleDropdown() {
+  const dropdown = document.getElementById('profileDropdown');
+  dropdown.classList.toggle('hidden');
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function closeDropdown(e) {
+    if (!dropdown.contains(e.target) && !e.target.closest('button')) {
+      dropdown.classList.add('hidden');
+      document.removeEventListener('click', closeDropdown);
+    }
+  });
+}
+</script>

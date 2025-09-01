@@ -1,0 +1,104 @@
+
+<div class="max-w-3xl mx-auto p-6 md:p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
+  
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- En-tête avec retour à la liste -->
+    <div class="flex items-center mb-10">
+      <%= link_to admin_attendances_path, class: "text-gray-400 hover:text-gray-600 transition-colors flex items-center" do %>
+        <i class="fas fa-arrow-left text-2xl mr-2"></i> Retour à la liste
+      <% end %>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 ml-6 tracking-tight">
+        Détails de la présence
+      </h1>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+      <div class="p-8 lg:p-12">
+        <div class="flex items-center space-x-6 mb-8">
+          <div class="h-20 w-20 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 text-3xl font-bold border-4 border-pink-100">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+  <h2 class="text-2xl font-bold text-gray-900">
+    <% if @attendance.agent.present? %>
+      <%= @attendance.agent.first_name %> <%= @attendance.agent.last_name %>
+    <% else %>
+      Non assigné
+    <% end %>
+  </h2>
+  <p class="text-sm text-gray-500 mt-1">
+    <% if @attendance.agent.present? %>
+      Agent de l'équipe
+    <% else %>
+      Aucun agent lié
+    <% end %>
+  </p>
+</div>
+
+        </div>
+
+        <!-- Informations sur la présence et statut -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 mt-10">
+          
+          <!-- Infos présence -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Informations sur la présence</h3>
+            <div class="space-y-4">
+              <div class="flex items-center text-gray-700">
+                <i class="fas fa-calendar-alt text-lg text-pink-500 mr-4"></i>
+                <p>
+                  <span class="font-medium">Date :</span>
+                  <%= @attendance.check_in.to_date.strftime("%d %b %Y") %>
+                </p>
+              </div>
+              <div class="flex items-center text-gray-700">
+                <i class="fas fa-clock text-lg text-pink-500 mr-4"></i>
+                <p>
+                  <span class="font-medium">Arrivée :</span>
+                  <%= @attendance.check_in&.strftime("%H:%M") || 'N/A' %>
+                </p>
+              </div>
+              <div class="flex items-center text-gray-700">
+                <i class="fas fa-sign-out-alt text-lg text-pink-500 mr-4"></i>
+                <p>
+                  <span class="font-medium">Départ :</span>
+                  <%= @attendance.check_out&.strftime("%H:%M") || 'N/A' %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Statut -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Statut</h3>
+            <div class="flex items-center text-gray-700">
+              <i class="fas fa-clipboard-check text-lg text-pink-500 mr-4"></i>
+              <p>
+                <span class="font-medium">Statut actuel :</span>
+                <span class="ml-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                  <%= @attendance.status == 'Présent' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                  <i class="fas <%= @attendance.status == 'Présent' ? 'fa-check-circle' : 'fa-times-circle' %> mr-1"></i>
+                  <%= @attendance.status %>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-gray-50 p-6 lg:p-8 flex flex-col md:flex-row justify-end md:space-x-4 space-y-4 md:space-y-0">
+        <%= link_to edit_admin_attendance_path(@attendance), class: "w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105 flex items-center justify-center" do %>
+          <i class="fas fa-edit mr-2"></i> Modifier
+        <% end %>
+        
+        <%= button_to admin_attendance_path(@attendance), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette présence ?" }, class: "w-full md:w-auto px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-300 transform hover:scale-105 flex items-center justify-center" do %>
+          <i class="fas fa-trash-alt mr-2"></i> Supprimer
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">Demandes de congés</h1>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Employé</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Dates</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Statut</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @leave_requests.each do |request| %>
+          <tr class="border-t border-gray-200 hover:bg-gray-50">
+            <td class="px-4 py-3 text-gray-800"><%= request.user.full_name %></td>
+            <td class="px-4 py-3 text-gray-800"><%= request.start_date %> - <%= request.end_date %></td>
+            <td class="px-4 py-3">
+              <% status_classes = case request.status
+                 when "pending" then "bg-yellow-100 text-yellow-800"
+                 when "approved" then "bg-green-100 text-green-800"
+                 when "rejected" then "bg-red-100 text-red-800"
+                 else "bg-gray-100 text-gray-800"
+                 end %>
+              <span class="px-2 py-1 rounded-full text-xs font-semibold <%= status_classes %>">
+                <%= request.status.capitalize %>
+              </span>
+            </td>
+            <td class="px-4 py-3 space-x-2">
+              <%= button_to "Approuver", manager_leave_request_path(request, status: "approved"), method: :patch, class: "bg-green-500 hover:bg-green-600 px-3 py-1 text-white rounded transition-colors duration-200" %>
+              <%= button_to "Refuser", manager_leave_request_path(request, status: "rejected"), method: :patch, class: "bg-red-500 hover:bg-red-600 px-3 py-1 text-white rounded transition-colors duration-200" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

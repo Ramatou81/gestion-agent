@@ -1,0 +1,78 @@
+
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- Enhanced Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+    <div class="space-y-1">
+      <h1 class="text-4xl font-extrabold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+        Gestion des utilisateurs
+      </h1>
+      <p class="text-slate-500">Gérez les accès et les permissions des utilisateurs</p>
+    </div>
+    
+    <%= link_to new_admin_user_path, 
+        class: "group relative px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5" do %>
+      <div class="absolute inset-0 bg-white rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <i class="fas fa-plus-circle mr-2 group-hover:scale-110 transition-transform duration-300"></i>
+      Nouvel utilisateur
+    <% end %>
+  </div>
+
+  <!-- Enhanced Table Container -->
+  <div class="bg-white rounded-2xl shadow-lg border border-pink-100/50 overflow-hidden backdrop-blur-xl">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-100">
+        <!-- Enhanced Table Header -->
+        <thead class="bg-gradient-to-r from-slate-50 to-pink-50">
+          <tr>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Nom</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Email</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Téléphone</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Adresse</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Date de naissance</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Date d'embauche</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Rôle</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Département</span></th>
+            <th class="py-4 px-6 text-left"><span class="text-sm font-bold text-slate-700">Actions</span></th>
+          </tr>
+        </thead>
+
+        <!-- Enhanced Table Body -->
+        <tbody class="divide-y divide-slate-100">
+          <% @users.each do |user| %>
+            <tr class="group hover:bg-pink-50/50 transition-colors duration-300">
+              <td class="py-4 px-6"><span class="text-sm font-medium text-slate-900"><%= user.name %></span></td>
+              <td class="py-4 px-6"><span class="text-sm text-slate-600"><%= user.email %></span></td>
+              <td class="py-4 px-6"><span class="text-sm text-slate-600"><%= user.phone.presence || "—" %></span></td>
+              <td class="py-4 px-6"><span class="text-sm text-slate-600"><%= user.address.presence || "—" %></span></td>
+              <td class="py-4 px-6"><span class="text-sm text-slate-600"><%= user.birth_date&.strftime("%d %b %Y") || "—" %></span></td>
+              <td class="py-4 px-6"><span class="text-sm text-slate-600"><%= user.hire_date&.strftime("%d %b %Y") || "—" %></span></td>
+              <td class="py-4 px-6">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-pink-500 to-purple-500 text-white">
+                  <%= user.role_name %>
+                </span>
+              </td>
+              <td class="py-4 px-6"><span class="text-sm text-slate-600"><%= user.department&.name %></span></td>
+
+              <!-- Enhanced Action Buttons -->
+              <td class="py-4 px-6">
+                <div class="flex items-center gap-2">
+                  <%= link_to admin_user_path(user), class: "group flex items-center p-2.5 rounded-xl bg-pink-50 text-purple-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:text-white transition-all duration-300" do %>
+                    <i class="fas fa-eye text-lg group-hover:scale-110 transition-transform duration-300"></i>
+                  <% end %>
+
+                  <%= link_to edit_admin_user_path(user), class: "group flex items-center p-2.5 rounded-xl bg-pink-50 text-pink-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-pink-500 hover:text-white transition-all duration-300" do %>
+                    <i class="fas fa-edit text-lg group-hover:scale-110 transition-transform duration-300"></i>
+                  <% end %>
+
+                  <%= button_to admin_user_path(user), method: :delete, data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, class: "px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition", form: { class: "inline-block m-0 p-0" } do %>
+                    <i class="fas fa-trash-alt"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

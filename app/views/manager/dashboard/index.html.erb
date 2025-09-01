@@ -1,0 +1,240 @@
+<div class="min-h-screen font-sans antialiased flex">
+
+  <button id="menu-btn" class="fixed top-4 left-4 z-50 md:hidden p-3 rounded-xl bg-white shadow-lg text-slate-600 transition-colors hover:text-indigo-600">
+    <i class="fas fa-bars text-lg"></i>
+  </button>
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
+
+  <aside id="sidebar" class="w-80 bg-white/90 backdrop-blur-xl fixed left-0 top-0 h-screen z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-100 shadow-xl">
+    <div class="flex flex-col h-full">
+      <div class="p-8 flex-1">
+        <a href="<%= manager_dashboard_index_path %>" class="flex items-center space-x-4 mb-10 group">
+          <%= image_tag "impact-plus.jpeg", class: "h-16 w-16 rounded-xl object-cover shadow-lg border-2 border-indigo-100 group-hover:scale-105 transition-transform duration-300", alt: "Impact Plus" %>
+          <div>
+            <h2 class="text-2xl font-black tracking-tight bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+              Impact Plus
+            </h2>
+            <p class="text-sm text-slate-500">Gestion Manager</p>
+          </div>
+        </a>
+        
+        <nav class="space-y-1">
+  <% nav_items = [
+    { name: 'Tableau de Bord', path: manager_dashboard_index_path, icon: 'fas fa-chart-pie', desc: 'Vue d\'ensemble' },
+    { name: 'Mon Équipe', path: manager_agents_path, icon: 'fas fa-users', desc: 'Gestion des agents' },
+    { name: 'Demandes de Congés', path: manager_leave_requests_path, icon: 'fas fa-calendar-alt', desc: 'Approbation des congés', badge: @conges_en_attente.count },
+    { name: 'Présences', path: manager_attendances_path, icon: 'fas fa-clock', desc: 'Présences des agents' },
+    { name: 'Rapports', path: '#', icon: 'fas fa-chart-line', desc: 'Statistiques d\'équipe' }
+  ] %>
+
+          <% nav_items.each do |item| %>
+            <% active = current_page?(item[:path]) %>
+            <%= link_to item[:path], class: "flex items-center px-4 py-3 rounded-xl #{active ? 'bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 shadow-sm' : 'hover:bg-slate-50'} transition-all duration-200 group" do %>
+              <div class="flex items-center flex-1">
+                <div class="mr-4 h-10 w-10 flex items-center justify-center rounded-lg #{active ? 'bg-gradient-to-r from-indigo-500 to-violet-500 shadow-md' : 'bg-slate-100'} group-hover:scale-110 transition-transform duration-200">
+                  <i class="<%= item[:icon] %> <%= active ? 'text-white' : 'text-slate-600' %>"></i>
+                </div>
+                <div>
+                  <span class="block font-medium text-slate-900"><%= item[:name] %></span>
+                  <span class="text-xs text-slate-500"><%= item[:desc] %></span>
+                </div>
+              </div>
+              <% if item[:badge] && item[:badge] > 0 %>
+                <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"><%= item[:badge] %></span>
+              <% end %>
+              <% if active %>
+                <div class="h-10 w-1 bg-gradient-to-b from-indigo-500 to-violet-500 rounded-full"></div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </nav>
+      </div>
+
+      <div class="p-8 border-t border-slate-100">
+        <div class="flex items-center px-4 py-3 rounded-xl bg-slate-50">
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white shadow-md">
+            <i class="fas fa-user-circle text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <p class="font-medium text-slate-900"><%= current_user.name %></p>
+            <p class="text-xs text-slate-500"><%= current_user.email %></p>
+          </div>
+          <%= button_to destroy_user_session_path, method: :delete, class: "ml-auto text-red-500 hover:text-red-700 transition-colors" do %>
+            <i class="fas fa-sign-out-alt text-lg"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+   <main class="flex-1 md:ml-40">
+    <div class="px-8 py-6 flex justify-between items-center bg-white border-b border-slate-100">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900">Tableau de bord</h1>
+        <p class="text-slate-500 mt-2">Vue d'ensemble de votre équipe</p>
+      </div>
+      <div class="relative">
+        <button class="relative group" onclick="toggleDropdown(event)">
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-200">
+            <i class="fas fa-user-circle text-lg"></i>
+            <div class="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 border-2 border-white rounded-full"></div>
+          </div>
+        </button>
+        <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50">
+          <div class="p-4 border-b border-slate-100 bg-gradient-to-r from-pink-50 to-purple-50">
+            <div class="flex items-center">
+              <div class="h-12 w-12 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white shadow-md">
+                <i class="fas fa-user-circle text-xl"></i>
+              </div>
+              <div class="ml-3">
+                <p class="font-medium text-slate-900"><%= current_user.name %></p>
+                <p class="text-sm text-slate-500"><%= current_user.email %></p>
+              </div>
+            </div>
+          </div>
+          <div class="p-2">
+            <%= link_to edit_user_registration_path, class: "flex items-center px-4 py-3 hover:bg-slate-50 rounded-lg transition-colors" do %>
+              <i class="fas fa-user-cog text-slate-400 w-5"></i>
+              <span class="ml-3 text-sm text-slate-600">Paramètres du profil</span>
+            <% end %>
+            <%= button_to destroy_user_session_path, method: :delete, class: "w-full flex items-center px-4 py-3 hover:bg-red-50 rounded-lg transition-colors text-red-600 hover:text-red-700" do %>
+              <i class="fas fa-sign-out-alt w-5"></i>
+              <span class="ml-3 text-sm">Déconnexion</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <% kpis = [
+          { title: 'Agents Actifs', value: @agents_actifs, icon: 'fas fa-users', color: 'bg-indigo-500', bg_light: 'bg-indigo-50' },
+          { title: 'Congés en Attente', value: @conges_en_attente.count, icon: 'fas fa-calendar-alt', color: 'bg-yellow-500', bg_light: 'bg-yellow-50' },
+          { title: 'Taux de Présence', value: number_to_percentage(@taux_presence, precision: 0), icon: 'fas fa-clipboard-check', color: 'bg-emerald-500', bg_light: 'bg-emerald-50' },
+          { title: 'Heures Cumulées', value: @heures_cumulees, icon: 'fas fa-clock', color: 'bg-fuchsia-500', bg_light: 'bg-fuchsia-50' }
+        ] %>
+        <% kpis.each do |kpi| %>
+          <div class="bg-white rounded-xl shadow-md p-6 border border-slate-100">
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-sm text-slate-500 font-medium"><%= kpi[:title] %></div>
+              <div class="h-8 w-8 rounded-full <%= kpi[:bg_light] %> flex items-center justify-center">
+                <i class="<%= kpi[:icon] %> text-sm text-<%= kpi[:color].gsub('bg-', '') %>"></i>
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-3xl font-bold text-slate-900"><%= kpi[:value] %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold text-slate-800 mb-4">Actions Rapides</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <% actions = [
+            { title: 'Nouvel Agent', desc: 'Ajouter un agent', icon: 'fas fa-user-plus', path: '#', color: 'indigo', gradient: 'from-indigo-500 to-purple-500' },
+            { title: 'Valider Congés', desc: 'Demandes de congés', icon: 'fas fa-calendar-check', path: manager_leave_requests_path, color: 'emerald', gradient: 'from-emerald-500 to-teal-500' },
+
+            { title: 'Rapports d\'Équipe', desc: 'Générer rapport', icon: 'fas fa-chart-line', path: '#', color: 'amber', gradient: 'from-amber-500 to-orange-500' },
+            { title: 'Présence', desc: 'Suivre l\'assiduité', icon: 'fas fa-clipboard-check', path: '#', color: 'rose', gradient: 'from-rose-500 to-pink-500' }
+          ] %>
+          <% actions.each do |action| %>
+            <%= link_to action[:path], class: "group relative overflow-hidden bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1" do %>
+              <div class="relative z-10 flex items-center">
+                <div class="h-14 w-14 rounded-xl bg-gradient-to-r <%= action[:gradient] %> text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <i class="<%= action[:icon] %> text-xl"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                  <h3 class="font-semibold text-slate-900 group-hover:text-<%= action[:color] %>-600 transition-colors"><%= action[:title] %></h3>
+                  <p class="text-sm text-slate-500"><%= action[:desc] %></p>
+                </div>
+                <div class="ml-auto">
+                  <i class="fas fa-arrow-right text-slate-300 group-hover:text-<%= action[:color] %>-500 group-hover:translate-x-1 transition-all duration-300"></i>
+                </div>
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-r <%= action[:gradient] %> opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white shadow rounded-2xl p-6 border border-slate-100">
+          <h2 class="text-xl font-semibold mb-4 text-slate-800">Demandes de congé en attente</h2>
+          <ul class="divide-y divide-gray-200">
+            <% @conges_en_attente.each do |request| %>
+              <li class="py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <div class="flex-1 mb-2 sm:mb-0">
+                  <span class="font-medium text-slate-900"><%= request.agent.full_name %></span>
+                  <p class="text-sm text-slate-500"><%= request.start_date %> → <%= request.end_date %></p>
+                </div>
+                <div class="flex space-x-2 mt-2 sm:mt-0">
+                  <span class="badge bg-yellow-100 text-yellow-800 font-medium px-2 py-0.5 rounded-full text-xs">En attente</span>
+                  <%= button_to "Valider", manager_leave_request_path(request, status: "approved"), method: :patch, class: "bg-green-500 text-white text-xs px-3 py-1 rounded-full hover:bg-green-600 transition" %>
+                  <%= button_to "Rejeter", manager_leave_request_path(request, status: "rejected"), method: :patch, class: "bg-red-500 text-white text-xs px-3 py-1 rounded-full hover:bg-red-600 transition" %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        
+        <div class="bg-white shadow rounded-2xl p-6 border border-slate-100">
+          <h2 class="text-xl font-semibold mb-4 text-slate-800">Activité Récente</h2>
+          <div class="space-y-4">
+            <% (@recent_activities || []).each do |act| %>
+  <div class="flex items-center p-3 rounded-xl hover:bg-slate-50 transition-all duration-200 group">
+    <div class="h-10 w-10 rounded-xl bg-<%= act[:color] %>-50 text-<%= act[:color] %>-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+      <i class="<%= act[:icon] %> text-lg"></i>
+    </div>
+    <div class="ml-3">
+      <p class="text-slate-700"><%= act[:text] %></p>
+    </div>
+  </div>
+<% end %>
+
+</div>
+ </div>
+  </div>
+  </div>
+</main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.getElementById('menu-btn');
+    const overlay = document.getElementById('overlay');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    // Fonction pour ouvrir/fermer la barre latérale
+    function toggleSidebar() {
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    }
+
+    // Gestion du menu hamburger
+    if (menuBtn) {
+      menuBtn.addEventListener('click', toggleSidebar);
+    }
+
+    // Fermeture de la barre latérale si on clique sur l'overlay
+    if (overlay) {
+      overlay.addEventListener('click', toggleSidebar);
+    }
+
+    // Fonction pour ouvrir/fermer le menu déroulant du profil
+    window.toggleDropdown = function(event) {
+      event.stopPropagation();
+      profileDropdown.classList.toggle('hidden');
+
+      // Fermeture du menu si on clique en dehors
+      document.addEventListener('click', function closeDropdown(e) {
+        if (!profileDropdown.contains(e.target) && !e.target.closest('button')) {
+          profileDropdown.classList.add('hidden');
+          document.removeEventListener('click', closeDropdown);
+        }
+      });
+    }
+  });
+</script>

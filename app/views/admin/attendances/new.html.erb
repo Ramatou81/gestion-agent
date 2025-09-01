@@ -1,0 +1,20 @@
+<div class="max-w-md mx-auto p-8 bg-white rounded-2xl shadow-2xl">
+  <div class="max-w-xl w-full">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-extrabold text-gray-900">
+        Enregistrer une nouvelle présence
+      </h1>
+      <p class="mt-2 text-sm text-gray-500">
+        Veuillez remplir les champs ci-dessous pour créer une nouvelle entrée de présence.
+      </p>
+    </div>
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
+      <%= render 'form', attendance: @attendance %>
+    </div>
+    
+    <div class="mt-8 text-center">
+      <%= link_to "Retour à la liste des présences", admin_attendances_path, class: "text-pink-600 hover:text-pink-800 font-medium transition-colors" %>
+    </div>
+  </div>
+</div>

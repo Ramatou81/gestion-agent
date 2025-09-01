@@ -1,15 +1,27 @@
 Rails.application.routes.draw do
+  namespace :manager do
+    resources :attendances, only: [:index, :show, :edit, :update]
+    resources :leave_requests, only: [:index, :update]
+    resources :agents, only: [:index, :show]
+    get "dashboard/index"
+  end
+  # Page d'accueil publique
+  root to: 'pages#home'
+
+  # Authentification Devise
   devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  # Dashboard admin
+  namespace :admin do
+     resources :agents
+    resources :departments
+    resources :attendances
+    resources :users
+    resources :reports
+    resources :settings
+    get "dashboard", to: "dashboard#index", as: :dashboard
+  end
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Ressources générales (protégées par login si nécessaire)
 
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

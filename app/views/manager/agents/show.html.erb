@@ -1,0 +1,51 @@
+
+<div class="p-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-slate-900">Profil de <%= @agent.name %></h1>
+    <%= link_to "Retour à la liste", manager_agents_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-100 space-y-4">
+    <!-- Informations de l'agent -->
+    <div class="flex items-center space-x-4">
+      <div class="h-16 w-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+        <%= @agent.first_name[0].upcase if @agent.first_name.present? %><%= @agent.last_name[0].upcase if @agent.last_name.present? %>
+      </div>
+      <div>
+        <h2 class="font-semibold text-slate-900 text-lg"><%= @agent.name %></h2>
+        <p class="text-sm text-slate-500"><%= @agent.email %></p>
+        <p class="text-sm text-slate-500">Rôle : <%= @agent.role_name %></p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      <!-- Demandes de congés -->
+      <div class="bg-indigo-50 p-4 rounded-xl">
+        <h3 class="text-sm font-medium text-indigo-600 mb-2">Demandes de congés</h3>
+        <% if @agent.leave_requests.exists? %>
+          <ul class="text-sm text-slate-700 space-y-1">
+            <% @agent.leave_requests.each do |leave| %>
+              <li><%= leave.start_date %> → <%= leave.end_date %> (<%= leave.status.capitalize %>)</li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-slate-500 text-sm">Aucune demande de congé.</p>
+        <% end %>
+      </div>
+
+      <!-- Pointages récents -->
+      <div class="bg-green-50 p-4 rounded-xl">
+        <h3 class="text-sm font-medium text-green-600 mb-2">Pointages récents</h3>
+        <% if @agent.attendances.exists? %>
+          <ul class="text-sm text-slate-700 space-y-1">
+            <% @agent.attendances.order(created_at: :desc).limit(5).each do |attendance| %>
+              <li>Check-in : <%= attendance.check_in %>, Check-out : <%= attendance.check_out %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-slate-500 text-sm">Aucun pointage enregistré.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

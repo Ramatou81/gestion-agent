@@ -1,0 +1,87 @@
+
+<%= form_with(model: [:admin, @user], local: true, class: "space-y-4") do |f| %>
+  <% if @user.errors.any? %>
+    <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-6">
+      <h2 class="font-bold mb-2"><%= pluralize(@user.errors.count, "erreur") %> a empêché l'enregistrement :</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Prénom -->
+    <div>
+      <%= f.label :first_name, "Prénom", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :first_name, placeholder: "Prénom", autocomplete: "given-name", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Nom -->
+    <div>
+      <%= f.label :last_name, "Nom", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :last_name, placeholder: "Nom", autocomplete: "family-name", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Email -->
+    <div class="sm:col-span-2">
+      <%= f.label :email, "Email", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.email_field :email, placeholder: "exemple@email.com", autocomplete: "email", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Téléphone -->
+    <div>
+      <%= f.label :phone, "Téléphone", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.telephone_field :phone, placeholder: "Numéro de téléphone", autocomplete: "tel", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Adresse -->
+    <div>
+      <%= f.label :address, "Adresse", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :address, placeholder: "Adresse", autocomplete: "street-address", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Date de naissance -->
+    <div>
+      <%= f.label :birth_date, "Date de naissance", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.date_field :birth_date, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Date d'embauche -->
+    <div>
+      <%= f.label :hire_date, "Date d'embauche", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.date_field :hire_date, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Rôle -->
+    <div>
+      <%= f.label :role, "Rôle", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :role, User::ROLES.map { |k, v| [k.to_s.capitalize, v] }, {}, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Département -->
+    <div>
+      <%= f.label :department_id, "Département", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.collection_select :department_id, Department.all, :id, :name, { prompt: "Sélectionner un département" }, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <!-- Mot de passe -->
+    <div>
+      <%= f.label :password, (@user.new_record? ? "Mot de passe" : "Nouveau mot de passe"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.password_field :password, placeholder: "••••••••", autocomplete: "new-password", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, "Confirmation du mot de passe", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.password_field :password_confirmation, placeholder: "••••••••", autocomplete: "new-password", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+    </div>
+  </div>
+
+  <!-- Boutons -->
+  <div class="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+    <%= f.submit @user.new_record? ? "Créer l'utilisateur" : "Enregistrer les modifications",
+          class: "w-full sm:w-auto px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl shadow-lg" %>
+    <%= link_to "Annuler", admin_users_path, class: "w-full sm:w-auto px-6 py-3 border-2 border-pink-300 text-pink-700 rounded-xl hover:bg-pink-50" %>
+  </div>
+<% end %>

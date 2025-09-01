@@ -1,0 +1,55 @@
+
+<%= form_with(model: [:admin, @agent], local: true) do |f| %>
+
+
+  <!-- Informations personnelles -->
+  <div class="space-y-4">
+    <h3 class="text-lg font-semibold text-gray-700">Informations Personnelles</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :first_name, "Prénom", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :first_name, placeholder: "Prénom", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+      <div>
+        <%= f.label :last_name, "Nom", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :last_name, placeholder: "Nom de famille", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+      <div>
+        <%= f.label :email, "Adresse email", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.email_field :email, placeholder: "nom@example.com", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+      <div>
+        <%= f.label :phone, "Numéro de téléphone", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :phone, placeholder: "Téléphone", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informations professionnelles -->
+  <div class="space-y-4 pt-4">
+    <h3 class="text-lg font-semibold text-gray-700">Informations Professionnelles</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :position, "Poste", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :position, placeholder: "Poste occupé", class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+      <div>
+        <%= f.label :status, "Statut", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :status, ["active", "inactive"], {}, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+      <div class="sm:col-span-2">
+        <%= f.label :department_id, "Département", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.collection_select :department_id, Department.all, :id, :name, {prompt: "Sélectionner un département"}, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boutons -->
+  <div class="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+    <%= f.submit @agent.new_record? ? "Créer l'agent" : "Enregistrer les modifications",
+          class: "w-full sm:w-auto px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl" %>
+
+    <%= link_to "Annuler", admin_agents_path, class: "w-full sm:w-auto px-6 py-3 border-2 border-pink-300 text-pink-700 rounded-xl hover:bg-pink-50" %>
+  </div>
+
+<% end %>
